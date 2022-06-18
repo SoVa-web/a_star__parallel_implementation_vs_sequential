@@ -35,7 +35,10 @@ class Graph:
                 if self.can_draw_edge_graph(self.set_nodes[iter] + i):
                         index_adj = self.set_nodes.index((self.set_nodes[iter] + i))
                         if self.can_draw_edge_graph((self.set_nodes[iter])) and iter != index_adj:
-                            self.matrix_adjacency[iter][index_adj] = self.matrix_adjacency[index_adj][iter] = 1
+                            #коли нам необхідно застосувати алгоритм для зваженого графу
+                            #сюди вказуватиметься вага ребра, 
+                            #в даній реалізації ми використовуємо матрицю суміжносіт для не зваженого графу
+                            self.matrix_adjacency[iter][index_adj] = self.matrix_adjacency[index_adj][iter] = 1 
 
     def can_draw_edge_graph(self, pos: Vec2):
         if not (0 <= pos.x < self.maze.size and 0 <= pos.y < self.maze.size):
