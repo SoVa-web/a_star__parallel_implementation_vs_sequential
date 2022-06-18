@@ -16,31 +16,6 @@ class Maze:
         self.part_free_row_col = part_free_row_col
         self.part_free_node = part_free_node
 
-    def generator_1(self): #генеруємо заблоковані вершини
-        new_blocked: Vec2 = None
-        blocked_node: Vec2 = None
-
-        def if_blocked(n, b):
-            b = Vec2(randint(0, (self.size - 1)), randint(0, (self.size - 1)))
-            print(n)
-            n += 1
-            if self.is_blocked(b): return if_blocked(n, b)
-            else: 
-                print(b)
-                return b
-
-        if ( self.num_blocked <= (self.num_nodes // 2)):
-            for i in range(self.num_blocked): 
-                new_blocked = if_blocked(0, blocked_node)
-                print(new_blocked)
-                self.blocked_nodes.append(Block(new_blocked))
-            for i in range(self.num_blocked):
-                print("Block( x = %v ; y = %v) \n", self.blocked_nodes[i].pos.x, self.blocked_nodes[i].pos.y)
-            print(self.blocked_nodes)
-        else:
-            print("Будь ласка, введіть допустиму кількість заблокованих вершин. Вона має бути максимум вдвічі меншою, ніж кількість вершин. /n ")
-            return -1
-
     #алгоритм генерації випадкового завжди консистентного лабіринту за заданою розмірністю
     #з однаковою щільністю лабіринту, що важливо для досліджень ефективності роботи алгоритмів А* на лабіринтах різних розмірностей
     #застосовуваний для квадраних матриць
@@ -67,9 +42,7 @@ class Maze:
             if( not is_free_nodes(node_x, node_y)): 
                 self.matrix_prototype[node_x][node_y] = 0
                 return
-            else: 
-                print("here")
-                return gen_free_node()
+            else: return gen_free_node()
 
         #перевірка чи вільний рядок/стовбець
         def is_free_row_col(num):
@@ -81,9 +54,7 @@ class Maze:
         def gen_free_row_col():
             num = randint(1, self.size-2)
             if is_free_row_col(num): return gen_free_row_col()
-            else: 
-                print(num)
-                return num
+            else: return num
 
         #ініціюємо прототип блокованими вершинами
         self.matrix_prototype = []
@@ -102,16 +73,12 @@ class Maze:
         #генеруємо вільні вершини
         for i in range(num_free_nodes):
             gen_free_node()
-        print("gugu")
-
-        
 
 
-
-
-    def is_blocked(self, pos: Vec2): #перевіряємо чи вершина заблокована
-        for node in self.blocked_nodes:
-            if node.pos.x == pos.x and node.pos.y == pos.y: 
-                return True
-        return False
+    #зчитуємо блоковані вершини у масив
+    def reading_prototype(self):
+        for i in range(self.size):
+            for j in range(self.size):
+                if self.matrix_prototype[i][j] == 1:
+                    self.blocked_nodes.append(Block(Vec2(j, i)))
         
