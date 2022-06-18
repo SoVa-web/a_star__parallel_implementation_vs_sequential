@@ -1,2 +1,2 @@
 # a_star__parallel_implementation_vs_sequential
-**Objective**: to implement and investigate the algorithm A * (A star) in parallel and sequential implementations in Python.
+**Objective**: Курсова робота з реалізації та дослідження ефективності в паралельній та послідовній реалізаціях алгоритму А* мовою програмування Python
