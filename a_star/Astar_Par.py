@@ -1,8 +1,11 @@
+from numbers import Number
 import string
 from xml.etree.ElementTree import tostring
 from a_star.Graph import Graph
 from a_star.vec2 import Vec2
 from a_star.ReferenceType import ReferenceType
+
+from functools import singledispatch
 
 import sys
 import numpy
@@ -90,23 +93,18 @@ class Astar_Par:
     ):
         while open and self.middle:
             current.value = self.choose_node(min_cost, best_node, open, total_cost, g, target)
-            print("We in line 92 in thread number  " + str(num_thread) + "\n" + str(current.value) + "\n")
-            if self.in_middle(current.value):
+            if self.in_middle_num(current.value):
                 func = (g[current.value] + self.hueristics[current.value][self.graph.set_all_nodes.index(target)])
-                potential = F_neibor.value - self.hueristics[neibor_current.value][self.graph.set_all_nodes.index(start)]
-                potential += g[current.value]
-                print("We in ine 94 in thread number  " + str(num_thread) + "\n" + str(func) + "\n" + str(potential) + "\n" + str(self.L) + "\n")
-                if func >= self.L or potential >= self.L:
+                if func > self.L :
                     # видаляємо current із middle і не розширюємо вузол
                     self.middle.remove(self.graph.set_all_nodes[current.value])
                 else:
                     # алгоритм працює далі з поточною вершиною
                     new_open_node = self.get_adjacent_nodes(new_open_node, current, closed)
-                    print("We in ine 103 in thread number  " + str(num_thread) + "\n" + str(new_open_node) + "\n")
                     for adjacent in new_open_node:
-                        if self.in_middle(adjacent):
+                        if self.in_middle_num(adjacent):
                             self.threadLock.acquire
-                            F.value = min(F.value, g[current.value] + self.graph.matrix_adjacency[current.value][adjacent] + g_2[neibor_current.value] + self.hueristics[current.value][neibor_current.value])
+                            F.value = min(F.value, g[current.value] + self.graph.matrix_adjacency[current.value][adjacent] + self.hueristics[adjacent][self.graph.set_all_nodes.index(target)])
                             self.L = min(F.value, F_neibor.value)
                             self.threadLock.release
                             if adjacent not in open:
@@ -118,16 +116,27 @@ class Astar_Par:
                                 g[adjacent] = (g[current.value] + self.graph.matrix_adjacency[current.value][adjacent])
                     self.middle.remove(self.graph.set_all_nodes[current.value])
             open.remove(current.value)
-            print("We in line 116 in thread number  " + str(num_thread) + "\n" + str(open) + "\n")
             closed.append(current.value)
 
-    def in_middle(self, current):
+
+    def in_middle_num(self, num: Number):
         for i in self.middle:
-            if i == self.graph.set_all_nodes[current]:
+            if i == self.graph.set_all_nodes[num]:
                 return True
-        return False
+        return False       
 
 
+        
+    def build_path(self, to_node, start: Vec2, previous, closed):
+        path = []
+        while previous[to_node] != None:
+            path.append(self.graph.set_all_nodes[to_node])
+            for node in closed:
+                if previous[to_node] == node:
+                    to_node = node
+        path.append(self.graph.set_all_nodes[start])
+        path.reverse()
+        return path
 
     def get_adjacent_nodes(self, new_open_node, current: ReferenceType, closed):
         new_open_node = []
@@ -176,3 +185,5 @@ class Astar_Par:
                     )
                 )
         return self.hueristics
+
+

@@ -17,6 +17,7 @@ from a_star.Astar_Par import Astar_Par
 
 
 import sys
+from datetime import datetime
 
 
 
@@ -66,6 +67,11 @@ def parallel_worker(astar: Astar_Par):
         thread_2.start()
         thread_1.join()
         thread_2.join()
+
+        part1 = astar.build_path(astar.current_node_1.value, astar.graph.set_all_nodes.index(astar.start), astar.previous_1, astar.closedlist_1)
+        part2 = astar.build_path(astar.current_node_2.value, astar.graph.set_all_nodes.index(astar.target), astar.previous_2, astar.closedlist_2)
+        part2.reverse()
+        print(part1, part2)
         print("Work parallel done!!!")
 
 
@@ -80,14 +86,21 @@ def main():
     graph = Graph(maze)
 
     #sequantial worker
-    # seq_worker = AstarWorker_Seq(graph,  Vec2(START_X, START_Y), Vec2(TARGET_X, TARGET_Y))
-    # path_seq = seq_worker.algorithm()
-    # print("Path by sequantial algorithm: ")
-    # print(path_seq)
+    f = datetime.now()
+    seq_worker = AstarWorker_Seq(graph,  Vec2(START_X, START_Y), Vec2(TARGET_X, TARGET_Y))
+    path_seq = seq_worker.algorithm()
+    final_f = datetime.now() - f
+    print("Path by sequantial algorithm: ")
+    print(path_seq)
+    
 
     #parallel worker
+    final_f_2 = datetime.now() 
     par_astar = Astar_Par(graph,  Vec2(START_X, START_Y), Vec2(TARGET_X, TARGET_Y))
     parallel_worker(par_astar)
+    final_f_2 = datetime.now() - final_f_2
+    print("First algorithm: " + str(final_f))
+    print("Second algorithm: " + str(final_f_2))
 
 if __name__ == '__main__':
     main()

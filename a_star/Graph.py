@@ -11,7 +11,9 @@ class Graph:
         self.matrix_adjacency = []
 
         self.init_set_nodes()
+        print("we init set node")
         self.init_matrix_adjacency()
+        print("we init matrix_adjacency")
 
 
     def init_set_nodes(self):
