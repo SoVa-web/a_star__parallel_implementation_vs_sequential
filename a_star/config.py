@@ -1,4 +1,4 @@
-SIZE = 20 #розмірність лабіринту SIZE*SIZE
+SIZE = 10 #розмірність лабіринту SIZE*SIZE
 START_X = 0
 START_Y = 0
 TARGET_X = 9

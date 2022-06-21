@@ -5,14 +5,12 @@ from a_star.Block import Block
 
 #--Лабіринт імплементований у вигляді матриці--
 class Maze:
-    def __init__(self, size, start_pos, target_pos, part_free_row_col, part_free_node):
+    def __init__(self, size, part_free_row_col, part_free_node):
         self.size = size #розмірність матриці
         self.blocked_nodes = [] #заблоковані вершини
         self.num_nodes = size*size #кількість вершин всього
         self.matrix_prototype = [] #матриця прототип лабіринту: 0 - вільна вершина, 1- заблокована; використовується лише для генерації та демострації
         self.matrix_adjacency = [] #матриця суміжності вершин
-        self.start: Vec2 = start_pos
-        self.target: Vec2 = target_pos
         self.part_free_row_col = part_free_row_col
         self.part_free_node = part_free_node
 
@@ -81,4 +79,5 @@ class Maze:
             for j in range(self.size):
                 if self.matrix_prototype[i][j] == 1:
                     self.blocked_nodes.append(Block(Vec2(j, i)))
+                    print(Vec2(j, i))
         

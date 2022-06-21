@@ -32,14 +32,15 @@ class Graph:
         dir = [Vec2(+1, 0), Vec2(-1, 0), Vec2(0, +1), Vec2(0, -1)]
         for i in dir:
              for iter in range(self.maze.num_nodes):
-                if self.can_draw_edge_graph(self.set_nodes[iter] + i):
-                        index_adj = self.set_nodes.index((self.set_nodes[iter] + i))
-                        if self.can_draw_edge_graph((self.set_nodes[iter])) and iter != index_adj:
+                if self.can_draw_edge_graph(self.set_all_nodes[iter] + i):
+                        index_adj = self.set_all_nodes.index((self.set_all_nodes[iter] + i))
+                        if self.can_draw_edge_graph((self.set_all_nodes[iter])) and iter != index_adj:
                             #коли нам необхідно застосувати алгоритм для зваженого графу
                             #сюди вказуватиметься вага ребра, 
                             #в даній реалізації ми використовуємо матрицю суміжносіт для не зваженого графу
                             self.matrix_adjacency[iter][index_adj] = self.matrix_adjacency[index_adj][iter] = 1 
 
+    #чи не є вершина ізольованою
     def can_draw_edge_graph(self, pos: Vec2):
         if not (0 <= pos.x < self.maze.size and 0 <= pos.y < self.maze.size):
             return False
