@@ -94,19 +94,9 @@ class Astar_Par:
         while open and self.middle:
             current.value = self.choose_node(min_cost, best_node, open, total_cost, g, target)
             if self.in_middle_num(current.value):
-                func = (g[current.value] + self.hueristics[current.value][self.graph.set_all_nodes.index(target)])
-                if func > self.L :
-                    # видаляємо current із middle і не розширюємо вузол
-                    self.middle.remove(self.graph.set_all_nodes[current.value])
-                else:
-                    # алгоритм працює далі з поточною вершиною
                     new_open_node = self.get_adjacent_nodes(new_open_node, current, closed)
                     for adjacent in new_open_node:
                         if self.in_middle_num(adjacent):
-                            self.threadLock.acquire
-                            F.value = min(F.value, g[current.value] + self.graph.matrix_adjacency[current.value][adjacent] + self.hueristics[adjacent][self.graph.set_all_nodes.index(target)])
-                            self.L = min(F.value, F_neibor.value)
-                            self.threadLock.release
                             if adjacent not in open:
                                 open.append(adjacent)
                                 previous[adjacent] = current.value
@@ -114,7 +104,8 @@ class Astar_Par:
                             if g[current.value] + 1 < g[adjacent]:
                                 previous[adjacent] = current.value
                                 g[adjacent] = (g[current.value] + self.graph.matrix_adjacency[current.value][adjacent])
-                    self.middle.remove(self.graph.set_all_nodes[current.value])
+                    if self.graph.set_all_nodes[current.value] in self.middle:
+                        self.middle.remove(self.graph.set_all_nodes[current.value])
             open.remove(current.value)
             closed.append(current.value)
 

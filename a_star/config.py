@@ -1,7 +1,7 @@
-SIZE = 15 #розмірність лабіринту SIZE*SIZE
+SIZE = 20 #розмірність лабіринту SIZE*SIZE
 START_X = 0
 START_Y = 0
-TARGET_X = 14
-TARGET_Y = 14
+TARGET_X = 19
+TARGET_Y = 19
 PART_FREE_ROW_COL = 3
-PART_FREE_NODE = 5
+PART_FREE_NODE = 3
