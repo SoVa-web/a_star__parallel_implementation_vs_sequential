@@ -86,21 +86,22 @@ def main():
     graph = Graph(maze)
 
     #sequantial worker
-    f = datetime.now()
+    
     seq_worker = AstarWorker_Seq(graph,  Vec2(START_X, START_Y), Vec2(TARGET_X, TARGET_Y))
+    f = datetime.now()
     path_seq = seq_worker.algorithm()
     final_f = datetime.now() - f
     print("Path by sequantial algorithm: ")
     print(path_seq)
-    
+    print("First algorithm: " + str(final_f))
 
     #parallel worker
-    final_f_2 = datetime.now() 
-    par_astar = Astar_Par(graph,  Vec2(START_X, START_Y), Vec2(TARGET_X, TARGET_Y))
-    parallel_worker(par_astar)
-    final_f_2 = datetime.now() - final_f_2
-    print("First algorithm: " + str(final_f))
-    print("Second algorithm: " + str(final_f_2))
+    #par_astar = Astar_Par(graph,  Vec2(START_X, START_Y), Vec2(TARGET_X, TARGET_Y))
+    #final_f_2 = datetime.now()
+    #parallel_worker(par_astar)
+    #final_f_2 = datetime.now() - final_f_2
+    #
+    #print("Second algorithm: " + str(final_f_2))
 
 if __name__ == '__main__':
     main()
