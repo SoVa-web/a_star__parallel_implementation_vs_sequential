@@ -23,6 +23,8 @@ from datetime import datetime
 
 
 def parallel_worker(astar: Astar_Par, gph: Graph):
+        final_f_2 = datetime.now()
+
         # потік, що виконує пошук від старту до цілі
         thread_1 = AstarWorker_Par( 
             1,
@@ -37,7 +39,6 @@ def parallel_worker(astar: Astar_Par, gph: Graph):
             astar.best_node_1,
             astar.total_cost_1,
             astar.g_1,
-            astar.g_2,
             astar.F_1,
             astar.F_2,
             astar.current_node_2,
@@ -57,7 +58,6 @@ def parallel_worker(astar: Astar_Par, gph: Graph):
             astar.best_node_2,
             astar.total_cost_2,
             astar.g_2,
-            astar.g_1,
             astar.F_2,
             astar.F_1,
             astar.current_node_1,
@@ -95,11 +95,13 @@ def parallel_worker(astar: Astar_Par, gph: Graph):
         if (part1[-1].x == astar.target.x and part1[-1].y == astar.target.y):
             part1.pop(-1)
 
+        final_f_2 = datetime.now() - final_f_2
+        
+        print("Second algorithm: " + str(final_f_2))
 
         print("Path by thread 1: ", part1, "\n")
         print("Path between 2 threads: ", path_between, "\n")
         print("Path by thread 2: ", part2)
-
         print("Len of path by parallel: ", len(part1) + len(path_between) + len(part2))
         print("Work parallel done!!!")
 
@@ -115,22 +117,17 @@ def main():
     graph = Graph(maze)
 
     #sequantial worker
-    
-    """seq_worker = AstarWorker_Seq(graph,  Vec2(START_X, START_Y), Vec2(TARGET_X, TARGET_Y))
+    seq_worker = AstarWorker_Seq(graph,  Vec2(START_X, START_Y), Vec2(TARGET_X, TARGET_Y))
     f = datetime.now()
     path_seq = seq_worker.algorithm()
     final_f = datetime.now() - f
     print("Path by sequantial algorithm: ")
     print(path_seq)
-    print("First algorithm: " + str(final_f))"""
+    print("First algorithm: " + str(final_f))
 
     #parallel worker
     par_astar = Astar_Par(graph,  Vec2(START_X, START_Y), Vec2(TARGET_X, TARGET_Y), COEF_DEVIATION_PATH)
-    final_f_2 = datetime.now()
     parallel_worker(par_astar, graph)
-    final_f_2 = datetime.now() - final_f_2
-    
-    print("Second algorithm: " + str(final_f_2))
 
 if __name__ == '__main__':
     main()

@@ -15,7 +15,6 @@ class AstarWorker_Par (threading.Thread):
     best_node: ReferenceType,
     total_cost: ReferenceType,
     g,
-    g_2,
     F: ReferenceType,
     F_neibor: ReferenceType,
     neibor_current: ReferenceType,
@@ -33,7 +32,6 @@ class AstarWorker_Par (threading.Thread):
         self.best_node: ReferenceType = best_node
         self.total_cost: ReferenceType = total_cost
         self.g = g
-        self.g_2 = g_2
         self.F: ReferenceType = F
         self.F_neibor: ReferenceType = F_neibor
         self.neibor_current: ReferenceType = neibor_current
@@ -41,11 +39,20 @@ class AstarWorker_Par (threading.Thread):
 
 
     def run(self):
-        print("Hello")
         self.algorithm.base_algorithm(
             self.num_thread,
-            self.open, self.closed, self.previous, Vec2(self.target.x, self.target.y),
-            Vec2(self.start_node.x, self.start_node.y), self.current, self.min_cost,
-            self.best_node, self.total_cost, self.g, self.g_2, self.F, self.F_neibor, 
-            self.neibor_current, self.new_open_node
+            self.open, 
+            self.closed, 
+            self.previous, 
+            Vec2(self.target.x, self.target.y),
+            Vec2(self.start_node.x, self.start_node.y), 
+            self.current, 
+            self.min_cost,
+            self.best_node, 
+            self.total_cost, 
+            self.g,  
+            self.F, 
+            self.F_neibor, 
+            self.neibor_current, 
+            self.new_open_node
         )

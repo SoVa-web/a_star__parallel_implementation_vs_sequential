@@ -89,7 +89,6 @@ class Astar_Par:
         best_node: ReferenceType,
         total_cost: ReferenceType,
         g,
-        g_2,
         F: ReferenceType,
         F_neibor: ReferenceType,
         neibor_current: ReferenceType,
