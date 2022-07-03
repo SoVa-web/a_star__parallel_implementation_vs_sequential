@@ -21,7 +21,7 @@ from datetime import datetime
 
 
 
-def parallel_worker(astar: Astar_Par):
+def parallel_worker(astar: Astar_Par, gph: Graph):
         # потік, що виконує пошук від старту до цілі
         thread_1 = AstarWorker_Par( 
             1,
@@ -68,10 +68,34 @@ def parallel_worker(astar: Astar_Par):
         thread_1.join()
         thread_2.join()
 
-        part1 = astar.build_path(astar.current_node_1.value, astar.graph.set_all_nodes.index(astar.start), astar.previous_1, astar.closedlist_1)
-        part2 = astar.build_path(astar.current_node_2.value, astar.graph.set_all_nodes.index(astar.target), astar.previous_2, astar.closedlist_2)
+        part1 = astar.build_path(
+            astar.current_node_1.value, 
+            astar.graph.set_all_nodes.index(astar.start), 
+            astar.previous_1, astar.closedlist_1
+        )
+        part2 = astar.build_path(
+            astar.current_node_2.value, 
+            astar.graph.set_all_nodes.index(astar.target), 
+            astar.previous_2, astar.closedlist_2
+        )
         part2.reverse()
-        print(part1, part2)
+
+        #оскільки пошуки двох потоків іноді зустрічаються в сусідніх точках або поряд
+        #для завершення пошуку повного шляху ми маємо знайти найкоротший перехід між точками на яких закінчили свій пошук потоки
+        #для цього вважаємо за доцільне запустити послідовний варіант алгортму
+        
+        between_worker = AstarWorker_Seq(gph,  part1[-1], part2[0])
+        path_between = between_worker.algorithm()
+        if (len(path_between) >= 2):
+            path_between.pop(0)
+            path_between.pop(-1)
+
+
+        print("Path by thread 1: ", part1, "\n")
+        print("Path between 2 threads: ", path_between, "\n")
+        print("Path by thread 2: ", part2)
+
+        print("Len of path by parallel: ", len(part1) + len(path_between) + len(part2))
         print("Work parallel done!!!")
 
 
@@ -87,21 +111,21 @@ def main():
 
     #sequantial worker
     
-    seq_worker = AstarWorker_Seq(graph,  Vec2(START_X, START_Y), Vec2(TARGET_X, TARGET_Y))
+    """seq_worker = AstarWorker_Seq(graph,  Vec2(START_X, START_Y), Vec2(TARGET_X, TARGET_Y))
     f = datetime.now()
     path_seq = seq_worker.algorithm()
     final_f = datetime.now() - f
     print("Path by sequantial algorithm: ")
     print(path_seq)
-    print("First algorithm: " + str(final_f))
+    print("First algorithm: " + str(final_f))"""
 
     #parallel worker
-    #par_astar = Astar_Par(graph,  Vec2(START_X, START_Y), Vec2(TARGET_X, TARGET_Y))
-    #final_f_2 = datetime.now()
-    #parallel_worker(par_astar)
-    #final_f_2 = datetime.now() - final_f_2
-    #
-    #print("Second algorithm: " + str(final_f_2))
+    par_astar = Astar_Par(graph,  Vec2(START_X, START_Y), Vec2(TARGET_X, TARGET_Y))
+    final_f_2 = datetime.now()
+    parallel_worker(par_astar, graph)
+    final_f_2 = datetime.now() - final_f_2
+    
+    print("Second algorithm: " + str(final_f_2))
 
 if __name__ == '__main__':
     main()
