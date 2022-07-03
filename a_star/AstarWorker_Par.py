@@ -39,6 +39,7 @@ class AstarWorker_Par (threading.Thread):
         self.neibor_current: ReferenceType = neibor_current
         self.new_open_node = new_open_node
 
+
     def run(self):
         print("Hello")
         self.algorithm.base_algorithm(

@@ -16,8 +16,10 @@ import threading
 
 
 class Astar_Par:
-    def __init__(self, graph: Graph, start: Vec2, target: Vec2):
+    def __init__(self, graph: Graph, start: Vec2, target: Vec2, coef_dev):
         self.threadLock = threading.Lock()
+
+        self.coef_deviation = coef_dev
 
         # спільні дані для всіх потоків
         # {{
@@ -67,6 +69,8 @@ class Astar_Par:
         self.new_open_node_1 = []
         self.new_open_node_2 = []
 
+        self.flag_finish = False;
+
         self.init_middle()
         self.hueristics = self.init_hueristics()
 
@@ -89,13 +93,15 @@ class Astar_Par:
         F: ReferenceType,
         F_neibor: ReferenceType,
         neibor_current: ReferenceType,
-        new_open_node,
+        new_open_node
     ):
-        while open and self.middle:
+        while open and self.middle and not self.flag_finish:
             current.value = self.choose_node(min_cost, best_node, open, total_cost, g, target)
+            if(self.graph.set_all_nodes[current.value].x == target.x and self.graph.set_all_nodes[current.value].y == target.y):
+                self.flag_finish = True
             if self.in_middle_num(current.value):
                 func = (self.hueristics[current.value][neibor_current.value])
-                if (func <= self.L):
+                if (func <= self.L + self.coef_deviation):
                     new_open_node = self.get_adjacent_nodes(new_open_node, current, closed)
                     for adjacent in new_open_node:
                         if self.in_middle_num(adjacent):
@@ -116,8 +122,9 @@ class Astar_Par:
                     if self.graph.set_all_nodes[current.value] in self.middle:
                         self.middle.remove(self.graph.set_all_nodes[current.value])
                     self.threadLock.release()
-            open.remove(current.value)
-            closed.append(current.value)
+            if(not self.flag_finish):
+                open.remove(current.value)
+                closed.append(current.value)
 
 
     def in_middle_num(self, num: Number):

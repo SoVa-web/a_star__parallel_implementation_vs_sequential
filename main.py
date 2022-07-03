@@ -6,7 +6,8 @@ from a_star.config import(
     TARGET_X,
     TARGET_Y,
     PART_FREE_ROW_COL,
-    PART_FREE_NODE
+    PART_FREE_NODE,
+    COEF_DEVIATION_PATH
 )
 
 from a_star.Maze import Maze
@@ -89,6 +90,10 @@ def parallel_worker(astar: Astar_Par, gph: Graph):
         if (len(path_between) >= 2):
             path_between.pop(0)
             path_between.pop(-1)
+        else:
+            path_between = []
+        if (part1[-1].x == astar.target.x and part1[-1].y == astar.target.y):
+            part1.pop(-1)
 
 
         print("Path by thread 1: ", part1, "\n")
@@ -120,7 +125,7 @@ def main():
     print("First algorithm: " + str(final_f))"""
 
     #parallel worker
-    par_astar = Astar_Par(graph,  Vec2(START_X, START_Y), Vec2(TARGET_X, TARGET_Y))
+    par_astar = Astar_Par(graph,  Vec2(START_X, START_Y), Vec2(TARGET_X, TARGET_Y), COEF_DEVIATION_PATH)
     final_f_2 = datetime.now()
     parallel_worker(par_astar, graph)
     final_f_2 = datetime.now() - final_f_2
